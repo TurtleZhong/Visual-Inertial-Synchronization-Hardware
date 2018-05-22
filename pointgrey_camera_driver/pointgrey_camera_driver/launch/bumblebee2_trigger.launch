@@ -1,0 +1,63 @@
+<launch>
+    <!-- Determine this using rosrun pointgrey_camera_driver list_cameras.
+         If not specified, defaults to first camera found. -->
+    <arg name="camera_name" default="camera" />
+    <arg name="bumblebee_serial" default="0" />
+    <arg name="calibrated" default="0" />
+
+    <group ns="$(arg camera_name)">
+        <node pkg="nodelet" type="nodelet" name="bumblebee_nodelet_manager" args="manager" output="screen"/>
+
+        <node pkg="nodelet" type="nodelet" name="bumblebee_nodelet"
+              args="load pointgrey_camera_driver/PointGreyStereoCameraNodelet bumblebee_nodelet_manager" output="screen">
+            <param name="frame_id" value="bumblebee" />
+            <param name="frame_rate" value="30" />
+            <param name="first_namespace" value="left" />
+            <param name="second_namespace" value="right" />
+            <param name="format7_color_coding" value="raw16" />
+            <param name="serial" value="$(arg bumblebee_serial)" />
+
+            <!-- Shutter & Gain Settings -->
+            <param name="auto_shutter" value="false" />
+            <param name="shutter_speed" value="0.03" />
+
+
+
+            <!-- Trigger Settings -->
+            <param name="enable_trigger" value="true" />
+            <param name="trigger_mode" value="mode14" />
+            <param name="trigger_source" value="gpio0" />
+            <param name="trigger_polarity" value="1" />
+            <param name="enable_trigger_delay" value="false" />
+            <param name="trigger_delay" value="0.0" />
+            <param name="trigger_parameter" value="0" />
+
+            <!-- Use the camera_calibration package to create these files -->
+            <param name="camera_info_url" if="$(arg calibrated)"
+                   value="file://$(env HOME)/.ros/camera_info/$(arg bumblebee_serial).yaml" />
+            <param name="second_info_url" if="$(arg calibrated)"
+                   value="file://$(env HOME)/.ros/camera_info/$(arg bumblebee_serial)_right.yaml" />
+        </node>
+
+        <node pkg="nodelet" type="nodelet" name="image_proc_debayer_left"
+              args="load image_proc/debayer bumblebee_nodelet_manager">
+
+            <remap from="image_raw" to="left/image_raw"/>
+            <remap from="image_mono" to="cam0/image_mono"/>
+            <remap from="image_color" to="left/image_color"/>
+
+            <!--<remap from="image_mono" to="cam1/image_raw"/>-->
+        </node>
+        <node pkg="nodelet" type="nodelet" name="image_proc_debayer_right"
+              args="load image_proc/debayer bumblebee_nodelet_manager">
+
+            <remap from="image_raw" to="right/image_raw"/>
+            <remap from="image_mono" to="cam1/image_mono"/>
+            <remap from="image_color" to="right/image_color"/>
+
+            <!--<remap from="image_mono" to="cam0/image_raw"/>-->
+        </node>
+
+    </group>
+
+</launch>
