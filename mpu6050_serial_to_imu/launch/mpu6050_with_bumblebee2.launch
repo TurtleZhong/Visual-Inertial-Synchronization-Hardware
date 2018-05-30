@@ -1,11 +1,11 @@
 <launch>
 
     <node pkg="mpu6050_serial_to_imu" type="mpu6050_serial_to_imu_node" name="mpu6050_serial_to_imu_node" required="true">
-        <param name="port" value="/dev/ttyACM0"/>
+        <param name="port" value="/dev/ttyUSB0"/>
     </node>
 
     <!--<node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="1 0 0 0 0 0 1 /imu/data link1" />-->
 
-    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find mpu6050_serial_to_imu)/rviz/demo.rviz" required="true"/>
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find mpu6050_serial_to_imu)/rviz/imu_with_camera.rviz" required="true"/>
 
 </launch>

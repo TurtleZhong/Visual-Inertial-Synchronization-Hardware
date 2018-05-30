@@ -36,8 +36,9 @@ The wiring diagram of the whole system is shown in figure.
 The Arduino will send useful information to the imu node via usb.The structure like this:
 
 |Description|'$'|0x03|quaternion|gyro|acc|temperature|timestamps|triggures|'\r'|'\n'|
-|-|--------|--------|
+|-|--------|--------|-|-|-|-|-|-|-|-|
 |Bytes|1|1|8|6|6|2|4|4|1|1|
+
 After we send the data to imu_node, we parse the data and reconstruct it as the imu messages:
 
 * **`imu/data`** ([sensor_msgs::Imu])

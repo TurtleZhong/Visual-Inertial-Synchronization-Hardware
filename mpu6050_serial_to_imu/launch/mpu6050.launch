@@ -1,7 +1,7 @@
 <launch>
 
   <node pkg="mpu6050_serial_to_imu" type="mpu6050_serial_to_imu_node" name="mpu6050_serial_to_imu_node" required="true">
-    <param name="port" value="/dev/ttyACM0"/>
+    <param name="port" value="/dev/ttyUSB1"/>
   </node>
 
   <!--<node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="1 0 0 0 0 0 1 /imu/data link1" />-->
